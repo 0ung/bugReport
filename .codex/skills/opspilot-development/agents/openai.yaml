@@ -1,0 +1,6 @@
+interface:
+  display_name: "OpsPilot Development"
+  short_description: "OpsPilot project workflow guide"
+  default_prompt: "Use $opspilot-development to implement the next OpsPilot GitHub issue with the project workflow."
+policy:
+  allow_implicit_invocation: true
