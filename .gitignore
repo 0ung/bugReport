@@ -1,0 +1,29 @@
+# IDE
+.idea/
+.vscode/
+
+# Build outputs
+bin/
+obj/
+build/
+out/
+target/
+dist/
+node_modules/
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+
+# Archives and generated bundles
+*.tar.gz
+*.zip
+*.b64
+b64chunks/
+
+# OS
+.DS_Store
+Thumbs.db
