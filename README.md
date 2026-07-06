@@ -61,12 +61,50 @@ OpsPilot은 이 흐름을 시스템화합니다.
 
 | 영역 | 기술 |
 | --- | --- |
-| Frontend | React, TypeScript |
-| Backend | Java 17, Spring Boot |
-| Database | PostgreSQL |
+| Frontend | React, TypeScript, Vite, React Router, TanStack Query |
+| UI | Tailwind CSS, shadcn/ui |
+| Backend | Java 17, Spring Boot, Spring Web, Spring Data JPA, Bean Validation |
+| Database | PostgreSQL, Flyway |
 | Search | Keyword Search, PostgreSQL Full Text Search, pgvector 후보 |
 | AI | LLM API, RAG 흐름 |
+| Test | JUnit 5, Mockito, Testcontainers, React Testing Library, Playwright |
 | Infra | Docker Compose, GitHub Actions |
+
+## 기술 선정 기준
+
+`skills.sh`의 React, Next.js, Databases, Testing 카테고리를 참고해 프론트엔드는 운영툴 UI를 빠르게 만들 수 있는 React 생태계로 잡고, 백엔드는 장애 대응 도메인과 데이터 일관성을 안정적으로 다루기 좋은 Spring Boot와 PostgreSQL 중심으로 구성합니다.
+
+### Frontend
+
+| 기술 | 사용 이유 |
+| --- | --- |
+| React | 장애 목록, 상세, 분석 결과처럼 상태가 많은 운영 화면을 컴포넌트 단위로 구성 |
+| TypeScript | Incident, Runbook, Analysis DTO를 타입으로 고정해 프론트/백엔드 계약을 명확히 관리 |
+| Vite | 별도 프론트엔드 앱을 가볍게 시작하고 빠른 개발 서버를 사용 |
+| React Router | Dashboard, Incident, Runbook, Analysis 화면 라우팅 |
+| TanStack Query | 장애 목록/상세/분석 요청 API의 서버 상태 캐싱과 재요청 관리 |
+| Tailwind CSS | 운영툴에 필요한 밀도 높은 화면을 빠르게 구성 |
+| shadcn/ui | 테이블, 폼, 다이얼로그, 탭 같은 관리 화면 컴포넌트 기반 확보 |
+| React Testing Library | 사용자 동작 기준의 컴포넌트 테스트 |
+| Playwright | 주요 운영 시나리오 E2E 테스트 |
+
+Next.js는 App Router, 서버 컴포넌트, 캐싱 전략까지 필요해질 때 확장 후보로 둡니다. 1차 MVP에서는 Spring Boot API와 분리된 React SPA 구성이 더 단순합니다.
+
+### Backend
+
+| 기술 | 사용 이유 |
+| --- | --- |
+| Java 17 | Spring Boot 기반 백엔드의 안정적인 LTS 런타임 |
+| Spring Boot | REST API, 트랜잭션, 설정, 검증, 테스트 구성을 표준화 |
+| Spring Web | Incident, Log, Runbook, Analysis API 구현 |
+| Spring Data JPA | 도메인 엔티티 중심의 CRUD와 조회 구현 |
+| Bean Validation | 요청 DTO 검증과 일관된 에러 응답 처리 |
+| PostgreSQL | 장애 이력, 로그, Runbook, 분석 결과 저장 |
+| Flyway | DB 스키마 변경 이력 관리 |
+| PostgreSQL Full Text Search | 초기 유사 장애/Runbook 키워드 검색 |
+| pgvector | 추후 Runbook/장애 이력 임베딩 검색 확장 후보 |
+| JUnit 5, Mockito | 서비스/도메인 단위 테스트 |
+| Testcontainers | PostgreSQL 연동 테스트를 실제 DB에 가깝게 검증 |
 
 ## 시스템 구조
 
