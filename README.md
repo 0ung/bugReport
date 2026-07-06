@@ -177,12 +177,16 @@ GitHub Issues와 Milestones를 기준으로 애자일식 WBS를 관리합니다.
 
 ## 브랜치 전략
 
+GitFlow를 단순화해서 사용합니다.
+
 ```text
 main
 develop
 feature/{issue-number}-{short-name}
 fix/{issue-number}-{short-name}
 docs/{issue-number}-{short-name}
+release/{version}
+hotfix/{issue-number}-{short-name}
 ```
 
 예시:
@@ -193,6 +197,29 @@ feature/17-create-incident-log-api
 feature/33-ai-analysis-api
 docs/54-architecture-docs
 ```
+
+브랜치 역할:
+
+| 브랜치 | 역할 |
+| --- | --- |
+| `main` | 배포 가능 상태를 유지하는 안정 브랜치 |
+| `develop` | 다음 배포를 준비하는 통합 브랜치 |
+| `feature/*` | 기능 구현 브랜치 |
+| `fix/*` | 일반 버그 수정 브랜치 |
+| `docs/*` | 문서 작업 브랜치 |
+| `release/*` | 배포 전 검증 및 마무리 브랜치 |
+| `hotfix/*` | `main` 기준 긴급 수정 브랜치 |
+
+기본 작업 흐름:
+
+```text
+feature/* 또는 docs/*
+    -> develop
+    -> release/*
+    -> main
+```
+
+일반 기능 작업은 `develop`에서 브랜치를 만들고, 완료 후 Pull Request로 `develop`에 병합합니다. 안정화가 끝나면 `release/*` 브랜치를 거쳐 `main`에 반영합니다.
 
 ## 커밋 메시지 규칙
 
@@ -214,4 +241,3 @@ docs(readme): add project architecture
 - AI를 무작정 붙인 구조가 아니라 근거 기반 RAG 흐름으로 설계
 - AI 분석 결과와 피드백까지 저장하는 개선 가능한 구조
 - SRE, DevOps, 백엔드 운영 역량과 연결 가능한 프로젝트
-
