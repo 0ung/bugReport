@@ -5,6 +5,7 @@ import com.opspilot.domain.incidentlog.IncidentLogService;
 import com.opspilot.global.response.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,14 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/incidents")
+@RequiredArgsConstructor
 public class IncidentController {
     private final IncidentService incidentService;
     private final IncidentLogService incidentLogService;
-
-    public IncidentController(IncidentService incidentService, IncidentLogService incidentLogService) {
-        this.incidentService = incidentService;
-        this.incidentLogService = incidentLogService;
-    }
 
     @GetMapping
     public ApiResponse<List<IncidentDtos.IncidentResponse>> findAll() {

@@ -6,6 +6,7 @@ import com.opspilot.domain.runbook.Runbook;
 import com.opspilot.domain.runbook.RunbookService;
 import com.opspilot.global.response.ApiResponse;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,14 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/search")
+@RequiredArgsConstructor
 public class SearchController {
     private final SearchService searchService;
     private final RunbookService runbookService;
-
-    public SearchController(SearchService searchService, RunbookService runbookService) {
-        this.searchService = searchService;
-        this.runbookService = runbookService;
-    }
 
     @GetMapping("/incidents")
     public ApiResponse<List<IncidentDtos.IncidentResponse>> searchIncidents(@RequestParam String keyword) {

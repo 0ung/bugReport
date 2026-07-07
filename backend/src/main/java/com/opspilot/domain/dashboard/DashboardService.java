@@ -12,19 +12,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class DashboardService {
     private final IncidentRepository incidentRepository;
     private final AiAnalysisRepository aiAnalysisRepository;
-
-    public DashboardService(IncidentRepository incidentRepository, AiAnalysisRepository aiAnalysisRepository) {
-        this.incidentRepository = incidentRepository;
-        this.aiAnalysisRepository = aiAnalysisRepository;
-    }
 
     public DashboardDtos.DashboardResponse getDashboard() {
         return new DashboardDtos.DashboardResponse(

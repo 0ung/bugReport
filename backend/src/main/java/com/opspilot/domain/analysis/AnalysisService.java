@@ -14,11 +14,13 @@ import com.opspilot.infra.llm.LlmJsonParser;
 import com.opspilot.infra.search.SearchDtos;
 import com.opspilot.infra.search.SearchService;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AnalysisService {
     private final IncidentRepository incidentRepository;
     private final IncidentLogRepository incidentLogRepository;
@@ -28,26 +30,6 @@ public class AnalysisService {
     private final SearchService searchService;
     private final LlmClient llmClient;
     private final LlmJsonParser llmJsonParser;
-
-    public AnalysisService(
-            IncidentRepository incidentRepository,
-            IncidentLogRepository incidentLogRepository,
-            RunbookRepository runbookRepository,
-            AiAnalysisRepository aiAnalysisRepository,
-            AiFeedbackRepository aiFeedbackRepository,
-            SearchService searchService,
-            LlmClient llmClient,
-            LlmJsonParser llmJsonParser
-    ) {
-        this.incidentRepository = incidentRepository;
-        this.incidentLogRepository = incidentLogRepository;
-        this.runbookRepository = runbookRepository;
-        this.aiAnalysisRepository = aiAnalysisRepository;
-        this.aiFeedbackRepository = aiFeedbackRepository;
-        this.searchService = searchService;
-        this.llmClient = llmClient;
-        this.llmJsonParser = llmJsonParser;
-    }
 
     public AnalysisDtos.AiAnalysisResponse requestAnalysis(Long incidentId) {
         Incident incident = incidentRepository.findById(incidentId)

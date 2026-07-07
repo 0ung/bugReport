@@ -4,22 +4,16 @@ import com.opspilot.domain.incident.Incident;
 import com.opspilot.domain.incident.IncidentRepository;
 import com.opspilot.domain.incident.IncidentStatus;
 import com.opspilot.global.error.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ResolutionService {
     private final IncidentRepository incidentRepository;
     private final ResolutionHistoryRepository resolutionHistoryRepository;
-
-    public ResolutionService(
-            IncidentRepository incidentRepository,
-            ResolutionHistoryRepository resolutionHistoryRepository
-    ) {
-        this.incidentRepository = incidentRepository;
-        this.resolutionHistoryRepository = resolutionHistoryRepository;
-    }
 
     public ResolutionDtos.ResolutionResponse create(
             Long incidentId,

@@ -13,11 +13,13 @@ import com.opspilot.infra.search.KeywordExtractor;
 import com.opspilot.infra.search.SearchDtos;
 import com.opspilot.infra.search.SearchService;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class IncidentService {
     private final IncidentRepository incidentRepository;
     private final IncidentLogRepository incidentLogRepository;
@@ -26,24 +28,6 @@ public class IncidentService {
     private final RunbookService runbookService;
     private final AnalysisService analysisService;
     private final ResolutionService resolutionService;
-
-    public IncidentService(
-            IncidentRepository incidentRepository,
-            IncidentLogRepository incidentLogRepository,
-            KeywordExtractor keywordExtractor,
-            SearchService searchService,
-            RunbookService runbookService,
-            AnalysisService analysisService,
-            ResolutionService resolutionService
-    ) {
-        this.incidentRepository = incidentRepository;
-        this.incidentLogRepository = incidentLogRepository;
-        this.keywordExtractor = keywordExtractor;
-        this.searchService = searchService;
-        this.runbookService = runbookService;
-        this.analysisService = analysisService;
-        this.resolutionService = resolutionService;
-    }
 
     public IncidentDtos.IncidentDetailResponse create(IncidentDtos.CreateIncidentRequest request) {
         List<String> keywords = keywordExtractor.extract(

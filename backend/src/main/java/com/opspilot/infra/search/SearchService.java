@@ -7,19 +7,16 @@ import com.opspilot.domain.runbook.RunbookRepository;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class SearchService {
     private final IncidentRepository incidentRepository;
     private final RunbookRepository runbookRepository;
-
-    public SearchService(IncidentRepository incidentRepository, RunbookRepository runbookRepository) {
-        this.incidentRepository = incidentRepository;
-        this.runbookRepository = runbookRepository;
-    }
 
     public List<Incident> searchIncidents(String keyword) {
         String normalized = normalize(keyword);

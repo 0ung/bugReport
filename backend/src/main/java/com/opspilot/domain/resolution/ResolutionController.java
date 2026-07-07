@@ -2,6 +2,7 @@ package com.opspilot.domain.resolution;
 
 import com.opspilot.global.response.ApiResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,12 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/incidents/{incidentId}/resolution")
+@RequiredArgsConstructor
 public class ResolutionController {
     private final ResolutionService resolutionService;
-
-    public ResolutionController(ResolutionService resolutionService) {
-        this.resolutionService = resolutionService;
-    }
 
     @PostMapping
     public ApiResponse<ResolutionDtos.ResolutionResponse> create(

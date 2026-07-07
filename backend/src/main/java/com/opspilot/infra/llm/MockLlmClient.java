@@ -3,15 +3,13 @@ package com.opspilot.infra.llm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class MockLlmClient implements LlmClient {
     private final ObjectMapper objectMapper;
-
-    public MockLlmClient(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
 
     @Override
     public String analyzeIncident(AiAnalysisRequest request) {

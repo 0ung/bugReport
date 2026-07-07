@@ -5,25 +5,17 @@ import com.opspilot.domain.incident.IncidentRepository;
 import com.opspilot.global.error.NotFoundException;
 import com.opspilot.infra.search.KeywordExtractor;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class IncidentLogService {
     private final IncidentRepository incidentRepository;
     private final IncidentLogRepository incidentLogRepository;
     private final KeywordExtractor keywordExtractor;
-
-    public IncidentLogService(
-            IncidentRepository incidentRepository,
-            IncidentLogRepository incidentLogRepository,
-            KeywordExtractor keywordExtractor
-    ) {
-        this.incidentRepository = incidentRepository;
-        this.incidentLogRepository = incidentLogRepository;
-        this.keywordExtractor = keywordExtractor;
-    }
 
     public IncidentLogDtos.IncidentLogResponse create(
             Long incidentId,

@@ -2,17 +2,15 @@ package com.opspilot.domain.runbook;
 
 import com.opspilot.global.error.NotFoundException;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class RunbookService {
     private final RunbookRepository runbookRepository;
-
-    public RunbookService(RunbookRepository runbookRepository) {
-        this.runbookRepository = runbookRepository;
-    }
 
     @Transactional(readOnly = true)
     public List<RunbookDtos.RunbookResponse> findAll() {
