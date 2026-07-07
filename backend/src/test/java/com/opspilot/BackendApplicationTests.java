@@ -2,10 +2,10 @@ package com.opspilot;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.opspilot.domain.analysis.AnalysisDtos;
-import com.opspilot.domain.analysis.AnalysisService;
-import com.opspilot.domain.dashboard.DashboardDtos;
-import com.opspilot.domain.dashboard.DashboardService;
+import com.opspilot.dto.AnalysisDtos;
+import com.opspilot.dto.DashboardDtos;
+import com.opspilot.service.AnalysisService;
+import com.opspilot.service.DashboardService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
