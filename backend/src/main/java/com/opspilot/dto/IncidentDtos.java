@@ -28,6 +28,7 @@ public final class IncidentDtos {
     ) {
     }
 
+    @Builder
     public record ChangeIncidentStatusRequest(@NotNull IncidentStatus status) {
     }
 
