@@ -2,11 +2,13 @@ import { BookOpenCheck, Plus, Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCreateRunbook, useRunbooks } from '../hooks/useIncidents'
+import { useLanguage } from '../i18n/language'
 import type { Runbook } from '../types/incident'
 
 const emptyRunbooks: Runbook[] = []
 
 export function RunbookPage() {
+  const { formatDate, t } = useLanguage()
   const runbooksQuery = useRunbooks()
   const createRunbookMutation = useCreateRunbook()
   const runbooks = runbooksQuery.data ?? emptyRunbooks
@@ -57,8 +59,8 @@ export function RunbookPage() {
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-medium text-slate-500">Runbook library</p>
-          <h2 className="text-2xl font-semibold text-slate-950">Runbooks</h2>
+          <p className="text-sm font-medium text-slate-500">{t('runbooks.eyebrow')}</p>
+          <h2 className="text-2xl font-semibold text-slate-950">{t('runbooks.title')}</h2>
         </div>
         <button
           type="button"
@@ -66,7 +68,7 @@ export function RunbookPage() {
           className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-slate-950 px-4 text-sm font-medium text-white hover:bg-slate-800"
         >
           <Plus aria-hidden="true" className="h-4 w-4" />
-          New runbook
+          {t('action.newRunbook')}
         </button>
       </div>
 
@@ -74,13 +76,13 @@ export function RunbookPage() {
         <section className="rounded-md border border-slate-200 bg-white">
           <div className="grid gap-3 border-b border-slate-200 p-4 md:grid-cols-[minmax(0,1fr)_180px]">
             <label className="relative">
-              <span className="sr-only">Search runbooks</span>
+              <span className="sr-only">{t('runbooks.search')}</span>
               <Search aria-hidden="true" className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
               <input
                 className="h-10 w-full rounded-md border border-slate-200 px-9 text-sm outline-none focus:border-slate-400"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search keyword or service"
+                placeholder={t('runbooks.searchPlaceholder')}
               />
             </label>
             <select
@@ -88,7 +90,7 @@ export function RunbookPage() {
               value={category}
               onChange={(event) => setCategory(event.target.value)}
             >
-              <option value="">All categories</option>
+              <option value="">{t('runbooks.allCategories')}</option>
               {categories.map((item) => (
                 <option key={item} value={item}>
                   {item}
@@ -166,11 +168,11 @@ export function RunbookPage() {
             >
               <div className="flex items-center gap-2 border-b border-slate-200 pb-3">
                 <BookOpenCheck aria-hidden="true" className="h-4 w-4 text-slate-500" />
-                <h3 className="text-sm font-semibold text-slate-950">Create runbook</h3>
+                <h3 className="text-sm font-semibold text-slate-950">{t('runbooks.create')}</h3>
               </div>
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="md:col-span-2">
-                  <span className="text-sm font-medium text-slate-700">Title</span>
+                  <span className="text-sm font-medium text-slate-700">{t('common.title')}</span>
                   <input
                     className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                     value={title}
@@ -178,7 +180,7 @@ export function RunbookPage() {
                   />
                 </label>
                 <label>
-                  <span className="text-sm font-medium text-slate-700">Service</span>
+                  <span className="text-sm font-medium text-slate-700">{t('common.service')}</span>
                   <input
                     className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                     value={serviceName}
@@ -186,7 +188,7 @@ export function RunbookPage() {
                   />
                 </label>
                 <label>
-                  <span className="text-sm font-medium text-slate-700">Owner</span>
+                  <span className="text-sm font-medium text-slate-700">{t('common.owner')}</span>
                   <input
                     className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                     value={owner}
@@ -194,7 +196,7 @@ export function RunbookPage() {
                   />
                 </label>
                 <label>
-                  <span className="text-sm font-medium text-slate-700">Category</span>
+                  <span className="text-sm font-medium text-slate-700">{t('runbooks.category')}</span>
                   <input
                     className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                     value={newCategory}
@@ -202,7 +204,7 @@ export function RunbookPage() {
                   />
                 </label>
                 <label>
-                  <span className="text-sm font-medium text-slate-700">Trigger keywords</span>
+                  <span className="text-sm font-medium text-slate-700">{t('runbooks.triggerKeywords')}</span>
                   <input
                     className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                     value={keywords}
@@ -211,12 +213,12 @@ export function RunbookPage() {
                   />
                 </label>
                 <label className="md:col-span-2">
-                  <span className="text-sm font-medium text-slate-700">Steps</span>
+                  <span className="text-sm font-medium text-slate-700">{t('runbooks.steps')}</span>
                   <textarea
                     className="mt-1 min-h-40 w-full rounded-md border border-slate-200 px-3 py-2 text-sm outline-none focus:border-slate-400"
                     value={steps}
                     onChange={(event) => setSteps(event.target.value)}
-                    placeholder="One step per line"
+                    placeholder={t('runbooks.stepsPlaceholder')}
                   />
                 </label>
               </div>
@@ -226,7 +228,7 @@ export function RunbookPage() {
                 className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-slate-950 px-4 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
               >
                 <Plus aria-hidden="true" className="h-4 w-4" />
-                Save runbook
+                {t('action.saveRunbook')}
               </button>
             </form>
           ) : selectedRunbook ? (
@@ -237,12 +239,14 @@ export function RunbookPage() {
                 </p>
                 <h3 className="mt-1 text-xl font-semibold text-slate-950">{selectedRunbook.title}</h3>
                 <p className="mt-2 text-sm text-slate-500">
-                  Owned by {selectedRunbook.owner}, updated{' '}
-                  {new Date(selectedRunbook.updatedAt).toLocaleDateString()}
+                  {t('runbooks.ownedBy', {
+                    owner: selectedRunbook.owner,
+                    date: formatDate(selectedRunbook.updatedAt),
+                  })}
                 </p>
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-slate-950">Trigger keywords</h4>
+                <h4 className="text-sm font-semibold text-slate-950">{t('runbooks.triggerKeywords')}</h4>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {selectedRunbook.triggerKeywords.map((keyword) => (
                     <span key={keyword} className="rounded-md bg-slate-100 px-2 py-1 text-xs text-slate-600">
@@ -252,7 +256,7 @@ export function RunbookPage() {
                 </div>
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-slate-950">Checklist</h4>
+                <h4 className="text-sm font-semibold text-slate-950">{t('runbooks.checklist')}</h4>
                 <ol className="mt-3 list-decimal space-y-3 pl-5 text-sm leading-6 text-slate-600">
                   {selectedRunbook.steps.map((step) => (
                     <li key={step}>{step}</li>
@@ -260,7 +264,7 @@ export function RunbookPage() {
                 </ol>
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-slate-950">Linked incidents</h4>
+                <h4 className="text-sm font-semibold text-slate-950">{t('runbooks.linkedIncidents')}</h4>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {selectedRunbook.linkedIncidentIds.length > 0 ? (
                     selectedRunbook.linkedIncidentIds.map((incidentId) => (
@@ -273,13 +277,13 @@ export function RunbookPage() {
                       </Link>
                     ))
                   ) : (
-                    <span className="text-sm text-slate-500">No linked incidents yet.</span>
+                    <span className="text-sm text-slate-500">{t('runbooks.noLinked')}</span>
                   )}
                 </div>
               </div>
             </div>
           ) : (
-            <div className="p-4 text-sm text-slate-500">No runbook selected.</div>
+            <div className="p-4 text-sm text-slate-500">{t('runbooks.noneSelected')}</div>
           )}
         </section>
       </div>

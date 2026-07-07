@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { App } from './App'
 import { AppProviders } from './AppProviders'
@@ -19,6 +20,7 @@ const ok = (data: unknown) =>
 
 describe('App', () => {
   beforeEach(() => {
+    window.localStorage.clear()
     vi.stubGlobal(
       'fetch',
       vi.fn((input: RequestInfo | URL) => {
@@ -60,6 +62,28 @@ describe('App', () => {
         <App />
       </AppProviders>,
     )
+
+    expect(await screen.findByText('Incident response dashboard')).toBeInTheDocument()
+    expect(screen.getByText('Runbook Assistant')).toBeInTheDocument()
+  })
+
+  it('switches the shell and dashboard copy between English and Korean', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <AppProviders>
+        <App />
+      </AppProviders>,
+    )
+
+    expect(await screen.findByText('Incident response dashboard')).toBeInTheDocument()
+
+    await user.click(screen.getAllByRole('button', { name: 'KO' })[0])
+
+    expect(await screen.findByText('장애 대응 대시보드')).toBeInTheDocument()
+    expect(screen.getByText('런북 어시스턴트')).toBeInTheDocument()
+
+    await user.click(screen.getAllByRole('button', { name: 'EN' })[0])
 
     expect(await screen.findByText('Incident response dashboard')).toBeInTheDocument()
     expect(screen.getByText('Runbook Assistant')).toBeInTheDocument()

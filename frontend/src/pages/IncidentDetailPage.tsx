@@ -17,26 +17,20 @@ import {
   useIncident,
   useRequestAnalysis,
 } from '../hooks/useIncidents'
+import { useLanguage, type TranslationKey } from '../i18n/language'
 import type { FeedbackRating } from '../types/incident'
 
 type DetailTab = 'overview' | 'logs' | 'analysis' | 'resolution'
 
-const tabs: Array<{ id: DetailTab; label: string }> = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'logs', label: 'Logs' },
-  { id: 'analysis', label: 'AI analysis' },
-  { id: 'resolution', label: 'Resolution' },
+const tabs: Array<{ id: DetailTab; labelKey: TranslationKey }> = [
+  { id: 'overview', labelKey: 'incident.overview' },
+  { id: 'logs', labelKey: 'incident.logs' },
+  { id: 'analysis', labelKey: 'incident.aiAnalysis' },
+  { id: 'resolution', labelKey: 'incident.resolution' },
 ]
 
-const formatDate = (value: string) =>
-  new Intl.DateTimeFormat('en', {
-    month: 'short',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(value))
-
 export function IncidentDetailPage() {
+  const { feedbackLabel, formatDateTime, sourceLabel, t } = useLanguage()
   const params = useParams()
   const incidentId = Number(params.incidentId)
   const incidentQuery = useIncident(incidentId)
@@ -53,26 +47,26 @@ export function IncidentDetailPage() {
   const incident = incidentQuery.data
 
   if (incidentQuery.isLoading) {
-    return <div className="text-sm text-slate-500">Loading incident...</div>
+    return <div className="text-sm text-slate-500">{t('incident.loading')}</div>
   }
 
   if (!incident) {
-    return <div className="text-sm text-slate-500">Incident not found.</div>
+    return <div className="text-sm text-slate-500">{t('incident.notFound')}</div>
   }
 
   const hasResolutionForm =
     actionSummary.trim().length > 0 && rootCause.trim().length > 0 && resolvedBy.trim().length > 0
   const overviewStats = [
-    { label: 'Logs', value: incident.logs.length, icon: ListChecks },
-    { label: 'Runbooks', value: incident.relatedRunbooks.length, icon: BookOpenText },
-    { label: 'Similar cases', value: incident.similarIncidents.length, icon: FileSearch },
+    { label: t('incident.logs'), value: incident.logs.length, icon: ListChecks },
+    { label: t('incident.runbooks'), value: incident.relatedRunbooks.length, icon: BookOpenText },
+    { label: t('incident.similarCases'), value: incident.similarIncidents.length, icon: FileSearch },
   ]
   const groundingItems = [
-    { label: 'Metadata', done: true },
-    { label: 'Logs', done: incident.logs.length > 0 },
-    { label: 'Similar incidents', done: incident.similarIncidents.length > 0 },
-    { label: 'Related runbooks', done: incident.relatedRunbooks.length > 0 },
-    { label: 'Resolution', done: Boolean(incident.resolution) },
+    { label: t('incident.metadata'), done: true },
+    { label: t('incident.logs'), done: incident.logs.length > 0 },
+    { label: t('incident.similarIncidents'), done: incident.similarIncidents.length > 0 },
+    { label: t('incident.relatedRunbooks'), done: incident.relatedRunbooks.length > 0 },
+    { label: t('incident.resolution'), done: Boolean(incident.resolution) },
   ]
 
   return (
@@ -84,7 +78,7 @@ export function IncidentDetailPage() {
             className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-950"
           >
             <ArrowLeft aria-hidden="true" className="h-4 w-4" />
-            Incidents
+            {t('incidents.title')}
           </Link>
           <p className="mt-3 text-sm font-medium text-slate-500">
             #{incident.id} / {incident.serviceName} / {incident.owner}
@@ -100,22 +94,22 @@ export function IncidentDetailPage() {
       <section className="rounded-md border border-slate-200 bg-white">
         <div className="grid gap-4 p-4 md:grid-cols-4">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Source</p>
-            <p className="mt-1 text-sm font-semibold text-slate-950">{incident.source}</p>
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">{t('common.source')}</p>
+            <p className="mt-1 text-sm font-semibold text-slate-950">{sourceLabel(incident.source)}</p>
           </div>
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Affected users</p>
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">{t('incident.affectedUsers')}</p>
             <p className="mt-1 text-sm font-semibold text-slate-950">
               {incident.affectedUsers.toLocaleString()}
             </p>
           </div>
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Occurred</p>
-            <p className="mt-1 text-sm font-semibold text-slate-950">{formatDate(incident.occurredAt)}</p>
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">{t('incident.occurred')}</p>
+            <p className="mt-1 text-sm font-semibold text-slate-950">{formatDateTime(incident.occurredAt)}</p>
           </div>
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Updated</p>
-            <p className="mt-1 text-sm font-semibold text-slate-950">{formatDate(incident.updatedAt)}</p>
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">{t('common.updated')}</p>
+            <p className="mt-1 text-sm font-semibold text-slate-950">{formatDateTime(incident.updatedAt)}</p>
           </div>
         </div>
       </section>
@@ -136,7 +130,7 @@ export function IncidentDetailPage() {
                       : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950',
                   ].join(' ')}
                 >
-                  {tab.label}
+                  {t(tab.labelKey)}
                 </button>
               ))}
             </div>
@@ -144,11 +138,11 @@ export function IncidentDetailPage() {
             {activeTab === 'overview' && (
               <div className="space-y-5 p-4">
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-950">Incident summary</h3>
+                  <h3 className="text-sm font-semibold text-slate-950">{t('incident.summary')}</h3>
                   <p className="mt-2 text-sm leading-6 text-slate-600">{incident.description}</p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-950">Extracted keywords</h3>
+                  <h3 className="text-sm font-semibold text-slate-950">{t('incident.extractedKeywords')}</h3>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {incident.keywords.map((keyword) => (
                       <span
@@ -185,7 +179,7 @@ export function IncidentDetailPage() {
                         </span>
                         <span className="text-sm font-medium text-slate-700">{log.source}</span>
                       </div>
-                      <span className="text-xs text-slate-500">{formatDate(log.capturedAt)}</span>
+                      <span className="text-xs text-slate-500">{formatDateTime(log.capturedAt)}</span>
                     </div>
                     <pre className="whitespace-pre-wrap rounded-md bg-slate-950 p-4 font-mono text-sm leading-6 text-slate-100">
                       {log.message}
@@ -209,9 +203,9 @@ export function IncidentDetailPage() {
               <div className="space-y-5 p-4">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <h3 className="text-sm font-semibold text-slate-950">Grounded AI analysis</h3>
+                    <h3 className="text-sm font-semibold text-slate-950">{t('incident.groundedAnalysis')}</h3>
                     <p className="mt-1 text-sm text-slate-500">
-                      Uses metadata, logs, similar incidents, and runbooks as context.
+                      {t('incident.groundedAnalysisHelper')}
                     </p>
                   </div>
                   <button
@@ -221,7 +215,7 @@ export function IncidentDetailPage() {
                     className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-slate-950 px-4 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-wait disabled:bg-slate-300"
                   >
                     <Play aria-hidden="true" className="h-4 w-4" />
-                    {incident.analysis ? 'Refresh analysis' : 'Request analysis'}
+                    {incident.analysis ? t('action.refreshAnalysis') : t('action.requestAnalysis')}
                   </button>
                 </div>
 
@@ -229,21 +223,21 @@ export function IncidentDetailPage() {
                   <div className="space-y-5">
                     <div className="rounded-md border border-slate-200 p-4">
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <h4 className="text-sm font-semibold text-slate-950">Summary</h4>
+                        <h4 className="text-sm font-semibold text-slate-950">{t('common.summary')}</h4>
                         <span className="rounded-md bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700 ring-1 ring-emerald-200">
-                          {incident.analysis.confidenceScore}% confidence
+                          {t('incident.confidence', { score: incident.analysis.confidenceScore })}
                         </span>
                       </div>
                       <p className="mt-2 text-sm leading-6 text-slate-600">{incident.analysis.summary}</p>
                     </div>
                     <div className="grid gap-4 lg:grid-cols-3">
-                      <AnalysisList title="Suspected causes" items={incident.analysis.suspectedCauses} />
-                      <AnalysisList title="Check steps" items={incident.analysis.checkSteps} />
-                      <AnalysisList title="Recommended actions" items={incident.analysis.recommendedActions} />
+                      <AnalysisList title={t('incident.suspectedCauses')} items={incident.analysis.suspectedCauses} />
+                      <AnalysisList title={t('incident.checkSteps')} items={incident.analysis.checkSteps} />
+                      <AnalysisList title={t('incident.recommendedActions')} items={incident.analysis.recommendedActions} />
                     </div>
                     <details className="rounded-md border border-slate-200 p-4">
                       <summary className="cursor-pointer text-sm font-semibold text-slate-950">
-                        Raw AI response
+                        {t('incident.rawAiResponse')}
                       </summary>
                       <pre className="mt-3 whitespace-pre-wrap rounded-md bg-slate-950 p-3 font-mono text-xs text-slate-100">
                         {incident.analysis.rawResponse}
@@ -252,8 +246,7 @@ export function IncidentDetailPage() {
                   </div>
                 ) : (
                   <div className="rounded-md border border-dashed border-slate-300 p-6 text-sm text-slate-500">
-                    This incident has logs and keywords ready. Run analysis to create a structured
-                    diagnosis.
+                    {t('incident.analysisEmpty')}
                   </div>
                 )}
               </div>
@@ -265,19 +258,19 @@ export function IncidentDetailPage() {
                   <div className="rounded-md border border-emerald-200 bg-emerald-50 p-4">
                     <div className="flex items-center gap-2 text-sm font-semibold text-emerald-800">
                       <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
-                      Resolved by {incident.resolution.resolvedBy}
+                      {t('incident.resolvedBy', { name: incident.resolution.resolvedBy })}
                     </div>
                     <dl className="mt-4 grid gap-4 text-sm md:grid-cols-2">
                       <div>
-                        <dt className="font-medium text-emerald-950">Action</dt>
+                        <dt className="font-medium text-emerald-950">{t('incident.action')}</dt>
                         <dd className="mt-1 text-emerald-800">{incident.resolution.actionSummary}</dd>
                       </div>
                       <div>
-                        <dt className="font-medium text-emerald-950">Root cause</dt>
+                        <dt className="font-medium text-emerald-950">{t('common.rootCause')}</dt>
                         <dd className="mt-1 text-emerald-800">{incident.resolution.rootCause}</dd>
                       </div>
                       <div className="md:col-span-2">
-                        <dt className="font-medium text-emerald-950">Prevention notes</dt>
+                        <dt className="font-medium text-emerald-950">{t('incident.preventionNotes')}</dt>
                         <dd className="mt-1 text-emerald-800">{incident.resolution.preventionNotes}</dd>
                       </div>
                     </dl>
@@ -285,26 +278,26 @@ export function IncidentDetailPage() {
                 ) : (
                   <div className="grid gap-4">
                     <label>
-                      <span className="text-sm font-medium text-slate-700">Action summary</span>
+                      <span className="text-sm font-medium text-slate-700">{t('incident.actionSummary')}</span>
                       <textarea
                         className="mt-1 min-h-24 w-full rounded-md border border-slate-200 px-3 py-2 text-sm outline-none focus:border-slate-400"
                         value={actionSummary}
                         onChange={(event) => setActionSummary(event.target.value)}
-                        placeholder="Describe the actual mitigation or fix."
+                        placeholder={t('incident.actionSummaryPlaceholder')}
                       />
                     </label>
                     <label>
-                      <span className="text-sm font-medium text-slate-700">Root cause</span>
+                      <span className="text-sm font-medium text-slate-700">{t('common.rootCause')}</span>
                       <input
                         className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                         value={rootCause}
                         onChange={(event) => setRootCause(event.target.value)}
-                        placeholder="External provider timeout, connection leak, deployment mismatch..."
+                        placeholder={t('incident.rootCausePlaceholder')}
                       />
                     </label>
                     <div className="grid gap-4 md:grid-cols-2">
                       <label>
-                        <span className="text-sm font-medium text-slate-700">Resolved by</span>
+                        <span className="text-sm font-medium text-slate-700">{t('incident.resolvedByField')}</span>
                         <input
                           className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                           value={resolvedBy}
@@ -312,12 +305,12 @@ export function IncidentDetailPage() {
                         />
                       </label>
                       <label>
-                        <span className="text-sm font-medium text-slate-700">Prevention notes</span>
+                        <span className="text-sm font-medium text-slate-700">{t('incident.preventionNotes')}</span>
                         <input
                           className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                           value={preventionNotes}
                           onChange={(event) => setPreventionNotes(event.target.value)}
-                          placeholder="Follow-up item or runbook update"
+                          placeholder={t('incident.preventionPlaceholder')}
                         />
                       </label>
                     </div>
@@ -336,16 +329,16 @@ export function IncidentDetailPage() {
                       className="inline-flex h-10 w-fit items-center justify-center gap-2 rounded-md bg-slate-950 px-4 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
                     >
                       <ClipboardCheck aria-hidden="true" className="h-4 w-4" />
-                      Mark resolved
+                      {t('action.markResolved')}
                     </button>
                   </div>
                 )}
 
                 <div className="border-t border-slate-200 pt-5">
-                  <h3 className="text-sm font-semibold text-slate-950">AI feedback</h3>
+                  <h3 className="text-sm font-semibold text-slate-950">{t('incident.aiFeedback')}</h3>
                   {incident.feedback ? (
                     <div className="mt-3 rounded-md border border-slate-200 p-4 text-sm text-slate-600">
-                      <p className="font-medium text-slate-950">{incident.feedback.rating}</p>
+                      <p className="font-medium text-slate-950">{feedbackLabel(incident.feedback.rating)}</p>
                       <p className="mt-2">{incident.feedback.note}</p>
                     </div>
                   ) : (
@@ -355,15 +348,15 @@ export function IncidentDetailPage() {
                         value={rating}
                         onChange={(event) => setRating(event.target.value as FeedbackRating)}
                       >
-                        <option value="HELPFUL">Helpful</option>
-                        <option value="PARTIAL">Partial</option>
-                        <option value="MISLEADING">Misleading</option>
+                        <option value="HELPFUL">{feedbackLabel('HELPFUL')}</option>
+                        <option value="PARTIAL">{feedbackLabel('PARTIAL')}</option>
+                        <option value="MISLEADING">{feedbackLabel('MISLEADING')}</option>
                       </select>
                       <textarea
                         className="min-h-20 rounded-md border border-slate-200 px-3 py-2 text-sm outline-none focus:border-slate-400"
                         value={feedbackNote}
                         onChange={(event) => setFeedbackNote(event.target.value)}
-                        placeholder="Was the analysis useful for this incident?"
+                        placeholder={t('incident.feedbackPlaceholder')}
                       />
                       <button
                         type="button"
@@ -378,7 +371,7 @@ export function IncidentDetailPage() {
                         className="inline-flex h-10 w-fit items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-300"
                       >
                         <MessageSquareText aria-hidden="true" className="h-4 w-4" />
-                        Save feedback
+                        {t('action.saveFeedback')}
                       </button>
                     </div>
                   )}
@@ -391,7 +384,7 @@ export function IncidentDetailPage() {
         <aside className="space-y-4">
           <section className="rounded-md border border-slate-200 bg-white">
             <div className="border-b border-slate-200 px-4 py-3">
-              <h3 className="text-sm font-semibold text-slate-950">Grounding data</h3>
+              <h3 className="text-sm font-semibold text-slate-950">{t('incident.groundingData')}</h3>
             </div>
             <div className="space-y-3 p-4">
               {groundingItems.map(({ label, done }) => (
@@ -405,7 +398,7 @@ export function IncidentDetailPage() {
                         : 'bg-slate-100 text-slate-500 ring-slate-200',
                     ].join(' ')}
                   >
-                    {done ? 'Ready' : 'Missing'}
+                    {done ? t('common.ready') : t('common.missing')}
                   </span>
                 </div>
               ))}
@@ -414,7 +407,7 @@ export function IncidentDetailPage() {
 
           <section className="rounded-md border border-slate-200 bg-white">
             <div className="border-b border-slate-200 px-4 py-3">
-              <h3 className="text-sm font-semibold text-slate-950">Related runbooks</h3>
+              <h3 className="text-sm font-semibold text-slate-950">{t('incident.relatedRunbooks')}</h3>
             </div>
             <ul className="divide-y divide-slate-100">
               {incident.relatedRunbooks.map((runbook) => (
@@ -430,7 +423,7 @@ export function IncidentDetailPage() {
 
           <section className="rounded-md border border-slate-200 bg-white">
             <div className="border-b border-slate-200 px-4 py-3">
-              <h3 className="text-sm font-semibold text-slate-950">Similar incidents</h3>
+              <h3 className="text-sm font-semibold text-slate-950">{t('incident.similarIncidents')}</h3>
             </div>
             <ul className="divide-y divide-slate-100">
               {incident.similarIncidents.map((similar) => (
@@ -452,7 +445,7 @@ export function IncidentDetailPage() {
                         </span>
                       ))
                     ) : (
-                      <span className="text-xs text-slate-400">Matched by incident history</span>
+                      <span className="text-xs text-slate-400">{t('incident.matchedByHistory')}</span>
                     )}
                   </div>
                 </li>

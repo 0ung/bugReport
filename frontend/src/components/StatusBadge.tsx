@@ -1,4 +1,5 @@
 import type { IncidentStatus, Severity } from '../types/incident'
+import { useLanguage } from '../i18n/language'
 
 const severityClasses: Record<Severity, string> = {
   LOW: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
@@ -21,16 +22,21 @@ type StatusBadgeProps = {
 }
 
 export function StatusBadge({ value, tone }: StatusBadgeProps) {
+  const { severityLabel, statusLabel } = useLanguage()
   const classes =
     tone === 'status'
       ? statusClasses[value as IncidentStatus]
       : severityClasses[value as Severity]
+  const label =
+    tone === 'status'
+      ? statusLabel(value as IncidentStatus)
+      : severityLabel(value as Severity)
 
   return (
     <span
       className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ${classes}`}
     >
-      {value}
+      {label}
     </span>
   )
 }

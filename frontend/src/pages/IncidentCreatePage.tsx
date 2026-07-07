@@ -2,6 +2,7 @@ import { ArrowLeft, ClipboardPlus, Sparkles } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCreateIncident } from '../hooks/useIncidents'
+import { useLanguage } from '../i18n/language'
 import type { IncidentSource, Severity } from '../types/incident'
 
 const severityOptions: Severity[] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']
@@ -22,6 +23,7 @@ const keywordPreview = (text: string) =>
   ].filter((keyword) => text.toLowerCase().includes(keyword.toLowerCase()))
 
 export function IncidentCreatePage() {
+  const { severityLabel, sourceLabel, t } = useLanguage()
   const navigate = useNavigate()
   const createIncidentMutation = useCreateIncident()
   const [title, setTitle] = useState('')
@@ -77,9 +79,9 @@ export function IncidentCreatePage() {
             className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-950"
           >
             <ArrowLeft aria-hidden="true" className="h-4 w-4" />
-            Incidents
+            {t('incidents.title')}
           </Link>
-          <h2 className="mt-2 text-2xl font-semibold text-slate-950">Register incident</h2>
+          <h2 className="mt-2 text-2xl font-semibold text-slate-950">{t('action.registerIncident')}</h2>
         </div>
         <button
           type="submit"
@@ -87,18 +89,18 @@ export function IncidentCreatePage() {
           className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-slate-950 px-4 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
         >
           <ClipboardPlus aria-hidden="true" className="h-4 w-4" />
-          {createIncidentMutation.isPending ? 'Registering...' : 'Create incident'}
+          {createIncidentMutation.isPending ? t('action.registering') : t('action.createIncident')}
         </button>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1.3fr_0.7fr]">
         <section className="rounded-md border border-slate-200 bg-white">
           <div className="border-b border-slate-200 px-4 py-3">
-            <h3 className="text-sm font-semibold text-slate-950">Incident metadata</h3>
+            <h3 className="text-sm font-semibold text-slate-950">{t('incidentCreate.metadata')}</h3>
           </div>
           <div className="grid gap-4 p-4 md:grid-cols-2">
             <label className="md:col-span-2">
-              <span className="text-sm font-medium text-slate-700">Title</span>
+              <span className="text-sm font-medium text-slate-700">{t('common.title')}</span>
               <input
                 className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                 value={title}
@@ -107,7 +109,7 @@ export function IncidentCreatePage() {
               />
             </label>
             <label>
-              <span className="text-sm font-medium text-slate-700">Service</span>
+              <span className="text-sm font-medium text-slate-700">{t('common.service')}</span>
               <input
                 className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                 value={serviceName}
@@ -116,7 +118,7 @@ export function IncidentCreatePage() {
               />
             </label>
             <label>
-              <span className="text-sm font-medium text-slate-700">Owner</span>
+              <span className="text-sm font-medium text-slate-700">{t('common.owner')}</span>
               <input
                 className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                 value={owner}
@@ -125,7 +127,7 @@ export function IncidentCreatePage() {
               />
             </label>
             <label>
-              <span className="text-sm font-medium text-slate-700">Severity</span>
+              <span className="text-sm font-medium text-slate-700">{t('common.severity')}</span>
               <select
                 className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                 value={severity}
@@ -133,13 +135,13 @@ export function IncidentCreatePage() {
               >
                 {severityOptions.map((item) => (
                   <option key={item} value={item}>
-                    {item}
+                    {severityLabel(item)}
                   </option>
                 ))}
               </select>
             </label>
             <label>
-              <span className="text-sm font-medium text-slate-700">Source</span>
+              <span className="text-sm font-medium text-slate-700">{t('common.source')}</span>
               <select
                 className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                 value={source}
@@ -147,13 +149,13 @@ export function IncidentCreatePage() {
               >
                 {sourceOptions.map((item) => (
                   <option key={item} value={item}>
-                    {item}
+                    {sourceLabel(item)}
                   </option>
                 ))}
               </select>
             </label>
             <label>
-              <span className="text-sm font-medium text-slate-700">Affected users</span>
+              <span className="text-sm font-medium text-slate-700">{t('incident.affectedUsers')}</span>
               <input
                 className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                 min={0}
@@ -163,12 +165,12 @@ export function IncidentCreatePage() {
               />
             </label>
             <label className="md:col-span-2">
-              <span className="text-sm font-medium text-slate-700">Description</span>
+              <span className="text-sm font-medium text-slate-700">{t('incidentCreate.description')}</span>
               <textarea
                 className="mt-1 min-h-28 w-full resize-y rounded-md border border-slate-200 px-3 py-2 text-sm outline-none focus:border-slate-400"
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
-                placeholder="Describe the user impact and observed symptoms."
+                placeholder={t('incidentCreate.descriptionPlaceholder')}
               />
             </label>
           </div>
@@ -176,13 +178,13 @@ export function IncidentCreatePage() {
 
         <section className="rounded-md border border-slate-200 bg-white">
           <div className="border-b border-slate-200 px-4 py-3">
-            <h3 className="text-sm font-semibold text-slate-950">Grounding preview</h3>
+            <h3 className="text-sm font-semibold text-slate-950">{t('incidentCreate.groundingPreview')}</h3>
           </div>
           <div className="space-y-4 p-4">
             <div>
-              <p className="text-sm font-medium text-slate-700">Extracted keywords</p>
+              <p className="text-sm font-medium text-slate-700">{t('incident.extractedKeywords')}</p>
               <div className="mt-2 flex flex-wrap gap-2">
-                {(previewKeywords.length > 0 ? previewKeywords : ['waiting for logs']).map((keyword) => (
+                {(previewKeywords.length > 0 ? previewKeywords : [t('incidentCreate.waitingForLogs')]).map((keyword) => (
                   <span
                     key={keyword}
                     className="rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700"
@@ -195,11 +197,10 @@ export function IncidentCreatePage() {
             <div className="rounded-md border border-slate-200 p-3">
               <div className="flex items-center gap-2 text-sm font-medium text-slate-800">
                 <Sparkles aria-hidden="true" className="h-4 w-4" />
-                AI-ready context
+                {t('incidentCreate.aiReadyContext')}
               </div>
               <p className="mt-2 text-sm text-slate-500">
-                After creation, OpsPilot will search similar incidents and runbooks before requesting
-                AI analysis.
+                {t('incidentCreate.aiReadyDescription')}
               </p>
             </div>
           </div>
@@ -208,14 +209,14 @@ export function IncidentCreatePage() {
 
       <section className="rounded-md border border-slate-200 bg-white">
         <div className="border-b border-slate-200 px-4 py-3">
-          <h3 className="text-sm font-semibold text-slate-950">Initial log</h3>
+          <h3 className="text-sm font-semibold text-slate-950">{t('incidentCreate.initialLog')}</h3>
         </div>
         <div className="p-4">
           <textarea
             className="min-h-48 w-full resize-y rounded-md border border-slate-200 bg-slate-950 px-3 py-3 font-mono text-sm text-slate-100 outline-none focus:border-slate-400"
             value={rawLog}
             onChange={(event) => setRawLog(event.target.value)}
-            placeholder="Paste the first error log or alert payload."
+            placeholder={t('incidentCreate.initialLogPlaceholder')}
           />
         </div>
       </section>

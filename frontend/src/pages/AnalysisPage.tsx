@@ -2,21 +2,15 @@ import { BrainCircuit, FileJson2, SearchCheck } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAnalysisResults, useIncidents, useRunbooks } from '../hooks/useIncidents'
+import { useLanguage } from '../i18n/language'
 import type { AiAnalysis, Incident, Runbook } from '../types/incident'
 
 const emptyAnalyses: AiAnalysis[] = []
 const emptyIncidents: Incident[] = []
 const emptyRunbooks: Runbook[] = []
 
-const formatDate = (value: string) =>
-  new Intl.DateTimeFormat('en', {
-    month: 'short',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(value))
-
 export function AnalysisPage() {
+  const { formatDateTime, t } = useLanguage()
   const analysisQuery = useAnalysisResults()
   const incidentsQuery = useIncidents()
   const runbooksQuery = useRunbooks()
@@ -37,14 +31,14 @@ export function AnalysisPage() {
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-sm font-medium text-slate-500">AI analysis</p>
-        <h2 className="text-2xl font-semibold text-slate-950">Analysis workbench</h2>
+        <p className="text-sm font-medium text-slate-500">{t('analysis.eyebrow')}</p>
+        <h2 className="text-2xl font-semibold text-slate-950">{t('analysis.title')}</h2>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
         <section className="rounded-md border border-slate-200 bg-white">
           <div className="border-b border-slate-200 px-4 py-3">
-            <h3 className="text-sm font-semibold text-slate-950">Stored analysis results</h3>
+            <h3 className="text-sm font-semibold text-slate-950">{t('analysis.storedResults')}</h3>
           </div>
           <ul className="divide-y divide-slate-100">
             {analyses.map((analysis) => {
@@ -68,7 +62,7 @@ export function AnalysisPage() {
                         {analysis.confidenceScore}%
                       </span>
                     </div>
-                    <p className="mt-1 text-xs text-slate-500">{formatDate(analysis.createdAt)}</p>
+                    <p className="mt-1 text-xs text-slate-500">{formatDateTime(analysis.createdAt)}</p>
                   </button>
                 </li>
               )
@@ -82,7 +76,7 @@ export function AnalysisPage() {
               <div className="flex flex-col gap-3 border-b border-slate-200 pb-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <p className="text-sm font-medium text-slate-500">
-                    {incident?.serviceName ?? 'Unknown service'}
+                    {incident?.serviceName ?? t('analysis.unknownService')}
                   </p>
                   <h3 className="mt-1 text-xl font-semibold text-slate-950">
                     {incident?.title ?? `Incident #${selectedAnalysis.incidentId}`}
@@ -93,26 +87,26 @@ export function AnalysisPage() {
                   className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-slate-200 px-4 text-sm font-medium text-slate-700 hover:bg-slate-50"
                 >
                   <SearchCheck aria-hidden="true" className="h-4 w-4" />
-                  Open incident
+                  {t('action.openIncident')}
                 </Link>
               </div>
 
               <div className="rounded-md border border-slate-200 p-4">
                 <div className="flex items-center gap-2 text-sm font-semibold text-slate-950">
                   <BrainCircuit aria-hidden="true" className="h-4 w-4" />
-                  Summary
+                  {t('common.summary')}
                 </div>
                 <p className="mt-2 text-sm leading-6 text-slate-600">{selectedAnalysis.summary}</p>
               </div>
 
               <div className="grid gap-4 lg:grid-cols-3">
-                <AnalysisColumn title="Suspected causes" items={selectedAnalysis.suspectedCauses} />
-                <AnalysisColumn title="Check steps" items={selectedAnalysis.checkSteps} />
-                <AnalysisColumn title="Recommended actions" items={selectedAnalysis.recommendedActions} />
+                <AnalysisColumn title={t('incident.suspectedCauses')} items={selectedAnalysis.suspectedCauses} />
+                <AnalysisColumn title={t('incident.checkSteps')} items={selectedAnalysis.checkSteps} />
+                <AnalysisColumn title={t('incident.recommendedActions')} items={selectedAnalysis.recommendedActions} />
               </div>
 
               <div>
-                <h4 className="text-sm font-semibold text-slate-950">Related runbooks</h4>
+                <h4 className="text-sm font-semibold text-slate-950">{t('incident.relatedRunbooks')}</h4>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {relatedRunbooks.map((runbook) => (
                     <Link
@@ -129,7 +123,7 @@ export function AnalysisPage() {
               <details className="rounded-md border border-slate-200 p-4">
                 <summary className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-slate-950">
                   <FileJson2 aria-hidden="true" className="h-4 w-4" />
-                  Raw response
+                  {t('analysis.rawResponse')}
                 </summary>
                 <pre className="mt-3 whitespace-pre-wrap rounded-md bg-slate-950 p-3 font-mono text-xs text-slate-100">
                   {selectedAnalysis.rawResponse}
@@ -137,7 +131,7 @@ export function AnalysisPage() {
               </details>
             </div>
           ) : (
-            <div className="p-4 text-sm text-slate-500">No analysis result stored yet.</div>
+            <div className="p-4 text-sm text-slate-500">{t('analysis.noResult')}</div>
           )}
         </section>
       </div>
