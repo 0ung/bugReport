@@ -40,7 +40,7 @@ export function IncidentDetailPage() {
   const [activeTab, setActiveTab] = useState<DetailTab>('overview')
   const [actionSummary, setActionSummary] = useState('')
   const [rootCause, setRootCause] = useState('')
-  const [resolvedBy, setResolvedBy] = useState('platform-oncall')
+  const [resolvedBy, setResolvedBy] = useState('')
   const [preventionNotes, setPreventionNotes] = useState('')
   const [rating, setRating] = useState<FeedbackRating>('HELPFUL')
   const [feedbackNote, setFeedbackNote] = useState('')

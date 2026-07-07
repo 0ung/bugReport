@@ -30,7 +30,7 @@ export function IncidentCreatePage() {
   const [serviceName, setServiceName] = useState('')
   const [severity, setSeverity] = useState<Severity>('HIGH')
   const [source, setSource] = useState<IncidentSource>('ALERT')
-  const [owner, setOwner] = useState('platform-oncall')
+  const [owner, setOwner] = useState('')
   const [affectedUsers, setAffectedUsers] = useState(0)
   const [description, setDescription] = useState('')
   const [rawLog, setRawLog] = useState('')
@@ -42,6 +42,7 @@ export function IncidentCreatePage() {
   const canSubmit =
     title.trim().length > 0 &&
     serviceName.trim().length > 0 &&
+    owner.trim().length > 0 &&
     description.trim().length > 0 &&
     rawLog.trim().length > 0
 
@@ -105,7 +106,7 @@ export function IncidentCreatePage() {
                 className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
-                placeholder="Payment API 502 Bad Gateway"
+                placeholder={t('incidentCreate.titlePlaceholder')}
               />
             </label>
             <label>
@@ -114,7 +115,7 @@ export function IncidentCreatePage() {
                 className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                 value={serviceName}
                 onChange={(event) => setServiceName(event.target.value)}
-                placeholder="payment-api"
+                placeholder={t('incidentCreate.servicePlaceholder')}
               />
             </label>
             <label>
@@ -123,7 +124,7 @@ export function IncidentCreatePage() {
                 className="mt-1 h-10 w-full rounded-md border border-slate-200 px-3 text-sm outline-none focus:border-slate-400"
                 value={owner}
                 onChange={(event) => setOwner(event.target.value)}
-                placeholder="payment-oncall"
+                placeholder={t('incidentCreate.ownerPlaceholder')}
               />
             </label>
             <label>

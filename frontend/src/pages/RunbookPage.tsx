@@ -18,8 +18,8 @@ export function RunbookPage() {
   const [isCreating, setIsCreating] = useState(false)
   const [title, setTitle] = useState('')
   const [serviceName, setServiceName] = useState('')
-  const [owner, setOwner] = useState('platform-oncall')
-  const [newCategory, setNewCategory] = useState('Operations')
+  const [owner, setOwner] = useState('')
+  const [newCategory, setNewCategory] = useState('')
   const [keywords, setKeywords] = useState('')
   const [steps, setSteps] = useState('')
 
@@ -52,6 +52,8 @@ export function RunbookPage() {
   const canCreate =
     title.trim().length > 0 &&
     serviceName.trim().length > 0 &&
+    owner.trim().length > 0 &&
+    newCategory.trim().length > 0 &&
     keywords.trim().length > 0 &&
     steps.trim().length > 0
 
